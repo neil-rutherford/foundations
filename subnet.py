@@ -107,6 +107,19 @@ def find_host_range(network_id_bin, broadcast_id_bin):
     return [first, last]
 
 
+def find_wildcard(subnet_mask):
+    sm_string = str(subnet_mask)
+    sm_list = sm_string.split('.')
+    for i in range(0, len(sm_list)):
+        sm_list[i] = int(sm_list[i])
+    wildcard = ''
+    for x in sm_list:
+        y = 255 - x
+        wildcard += str(y)
+        wildcard += '.'
+    return wildcard[:-1]
+
+
 def do_the_thing(ip_address, cidr):
 
     # Step 1: Define IP address and CIDR
@@ -135,6 +148,7 @@ def do_the_thing(ip_address, cidr):
     return {
         'ip_address': ip_address,
         'cidr': cidr,
+        'subnet_mask': bin2ip(cidr2bin(cidr)),
         'network_id': bin2ip(network_id_bin),
         'broadcast_id': bin2ip(broadcast_id_bin),
         'host_range': [hr[0], hr[1]],
